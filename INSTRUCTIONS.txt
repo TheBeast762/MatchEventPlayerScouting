@@ -1,0 +1,117 @@
+INSTRUCTIONS: (4-8 pages, June 20th)
+_______________
+A practical approach
+You're expected to provide an A-Z sports data science use case, where you explain 1. the demand of the 'client' (a sports practitioner, athlete, coach, manager, etc..), 2. what your data looks like and how you structure it to address the question at hand, 3. the modelling technique that you've applied (data science, computer vision..), and 4. how your data-driven answer can be given back to the 'client'. The third component is the most important as we want to see how innovative and interesting your approach is.
+
+Creativity
+We understand that tackling each of these 4 challenges is a bit ambitious, so you are permitted to take a shortcut if necessary. For example, for how you provide your feedback: feel free to make a mock-up using paint, rather than developing a web-app in R shiny. We deem creativity in the data analyses more important than a complete pipeline from A-Z. If you need to take a shortcut or make some assumptions, we are OK with that if it means you can do something very new and creative. Feel free to consult us about a specific 'shortcut'.
+
+1. Event data in football
+A lot has been said about football data during this course. Now, you get the chance to actually work with quite some football data. For this assignment, the student is expected to come up with novel insights that can aid a coach, manager or player in their daily decisions. What to do on the pitch in a given context? This type of data also lends itself for opponent mining: What to do against a specific opponent? In your analyses make sure you distinguish the obvious (e.g., if penalty  high chance of scoring) from the interesting. Your analysis should most likely include an assessment of the typical behaviour of ‘our’ team and a suggested improvement. Given that this dataset has been properly structured and used for many research questions in the past, you are expected to go above and beyond the already existing work.
+
+Dataset
+Consists of soccer-logs: Match events 
+	- Type info (pass, shot, foul, tackle etc.)
+	- Timestamp
+	- Player(s)
+	- Position on the field
+	- Other info (e.g.: Pass Accuracy)
+Manual annotation by video analysts using tagging software
+	- 3 operators, one per team and one impartial
+	- Quality control: 1.Automatic correction/suggestion 2.Manual quality controllers
+1,941 matches, 3,251,294 events, 4,299 players
+Season 2017/2018 (La Liga, Serie A, Premier League, Bundesliga, Ligue 1) + WK 2018 + EK 2016
+[competitions.json]			#Meta-info competitions
+	- area: 		Geographic location (e.g.: Germany)
+	- format: 		Domestic league or International Cup
+	- name: 		Name of competition
+	- type: 		Club/International
+	- wyId: 		Unique identifier code for competition
+[matches/matches_X.json]	#Meta-info per match per division
+	- competitionId:Unique identifier to which division match belongs to
+	- date/dateutc:	Date and time when match starts
+	- duration:		Regular/ExtraTime/Penalties
+	- gameweek:		Relative to start of competition
+	- label:		Names of two clubs and end result
+	- roundID:		Unique identifier for competition match-day
+	- seasonId:		Unique identifier for match's season
+	- status:		Played/Cancelled/Postponed/Suspended
+	- venue: 		Stadium
+	- winner:		Identifier of matchwinning team/0 for draw
+	- wyId:			Unique identifier of match
+	- referees:		Identifier with role
+	- teamsData:	Dictionary with both teams their:
+		- hasFormation:	1 if team formation data present, 0 otherwise
+		- score:		Number of goals scored by team (no penalties)
+		- scoreET:		Number of goals during match + Extra time
+		- scoreHT:		First half goals
+		- scoreP:		Number of post-match penalty goals
+		- side:			Home/Away
+		- teamId:		Identifier of team
+		- coachId:		Identifier of team's coach
+		- bench:		List of players starting on the bench (with info: goals, own goals, cards)
+		- lineup:		List of starting players (with info: goals, own goals, cards)
+		- substitutions:List of substitutions, players + timestamp
+[teams.json]
+	- city:			Team's city location
+	- name:			Common name of team
+	- area:			Geographic area
+	- wyId:			Unique identifier
+	- officialName:	Complete name
+	- type:			Club/National
+[players.json]
+	- birthArea:			Geographic info birth
+	- birthDate:			Date of birth
+	- currentNationalTeamId:Identifier of national team
+	- currentTeamId:		Identifier of team
+	- firstName:			-
+	- lastName:				-
+	- foot:					Preffered foot
+	- height:				-
+	- middleName:			-
+	- passportArea:			Geographic area associated with passport
+	- role:					Position in the field
+	- shortName2:			Short name of player
+	- weight:				-
+	- wyId:					Unique identifier
+[events/events_X.json]
+	- eventId:		Identifier of event's type 
+	- eventName:	Name of event's type Pass/Foul/Shot/Duel/Free kick/Offside touch
+	- subEventId:	Identifier of subevent (e.g.: event: pass, subevent: cross)
+	- subEventName:	Name of subevent
+	- tags:			Additional information about (sub)event (Subevent: Crosspass, tag: assist)
+	- eventSec:		Seconds since beginning of match when event occurred 
+	- id:			Unique identifier
+	- matchId:		Identifier of referred match
+	- matchPeriod:	1H/2H/E1/E2/P
+	- playerId:		Identifier of referred player
+	- positions:	(x,y) associated with event (field percentage away from opponent's goal, field percentage away from right side)
+	- teamId:		Identifier of referred team
+[coaches.json]
+	- wyId:			Unique identifier
+	- shortName:	-
+	- firstName:	-
+	- middleName:	-
+	- lastName:		-
+	- birthDate:	-
+	- birthArea:	Geographic birth info
+	- passportArea:	Associated passport area
+	- currentTeamId:Associated team identifier
+[referees.json]
+	- wyId:			Unique identifier
+	- shortName:	-
+	- firstName:	-
+	- middleName:	-
+	- lastName:		-
+	- birthDate:	-
+	- birthArea:	Geographic birth info
+	- passportArea:	Associated passport area
+
+PlayeRank:
+[playerank.json]#Dictionary of how good each player was per match
+	- goalScored:		Amount of goals scored in specific match
+	- playerankScore:	PlayeRank score for that player in this specific match
+	- matchId:			Unique identifier for specific match
+	- playerId:			Unique identifier for specific player
+	- roleCluster:		Role of this specific player in this specific match (left fielder, central forward, central fielder, right fielder, central back, left forward etc.)
+	- minutesPlayed		Amount of minutes played in this specific match
